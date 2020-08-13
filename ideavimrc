@@ -1,0 +1,109 @@
+"map <leader><leader>e :vsp /home/phazo/.ideavimrc<CR>
+"map <leader><leader>s :source /home/phazo/.ideavimrc<CR>
+
+"map <leader><leader>e :vsp C:\Users\bpater\.ideavimrc<CR>
+"map <leader><leader>s :source C:\Users\bpater\.ideavimrc<CR>
+map <leader><leader>e :vsp /Users/phazo/.ideavimrc<CR>
+map <leader><leader>s :source /Users/phazo/.ideavimrc<CR>
+
+set number
+set relativenumber
+set scrolloff=10
+set showmode
+set ideamarks
+
+set autoread          
+set wildmenu          
+set surround
+set showmatch 
+set timeoutleu=400
+set insearch
+set hlsearch
+
+set surround
+set multiple-cursors
+set commentary
+
+let mapleader = ","
+
+noremap H ^
+noremap L $
+
+nnoremap D d$
+nnoremap Y y$
+
+nnoremap go o<Esc>k
+nnoremap gO O<Esc>j
+nmap zk O<Esc>j
+
+map mu :action MethodUp<CR>
+map md :action MethodDown<CR>
+
+nnoremap gj 15gjzz
+nnoremap gk 15gkzz
+vnoremap gj 15gjzz
+vnoremap gk 15gkzz
+
+inoremap jk <Esc>
+inoremap JK <Esc>
+inoremap Jk <Esc>
+inoremap jK <Esc>
+
+
+" Smart way to move between windows
+map <space>j <C-W>j
+map <space>k <C-W>k
+map <space>h <C-W>h
+map <space>l <C-W>l
+
+imap ;; <Esc>A;<Esc>
+map <space>; A;<ESC>
+
+"imap .. <Esc>A.<C-space>
+map <space>. A.<C-space>
+
+nnoremap gcc :action CommentByLineComment<cr>
+map <space>] :action GotoNextError<cr>
+map <space>[ :action GotoPreviousError<cr>
+nnoremap <esc><esc> :noh<return>
+map <space><Enter> i<Enter><ESC>
+
+nmap <silent> <leader>f :action GotoFile<cr>
+nmap <silent> <leader>t :action GotoClass<cr>
+nmap <silent> <leader>e :action RecentChangedFiles<CR>
+nmap <silent> <leader>r :action RecentFiles<CR>
+map <silent> <leader>w :action ActivateProjectToolWindow<CR>
+nmap <silent> <leader>s :action Switcher<CR>
+nmap <silent> <leader>a :action GotoAction<CR>
+nmap <silent> <leader>s :action GotoSymbol<cr>
+nmap <silent> <leader>x :q<CR>
+map <leader>v :vsplit<CR>
+map <leader>q :action ToggleDistractionFreeMode<CR>
+map <leader>z :action ToggleFullScreen<CR>
+map <leader>p :action ChooseRunConfiguration<CR>
+map <leader>d :action ChooseDebugConfiguration<CR>
+nmap <space>o :action FileStructurePopup<cr>
+map <space>gd :action GotoDeclaration<CR>
+map <space>gi :action GotoImplementation<CR>
+map <space>s :w<cr>
+map <space>r :action Refactorings.QuickListPopupAction<CR>
+map <space>t :action InsertLiveTemplate<CR>i
+map <space>y :action SurroundWith<CR>
+map <space>e :action ShowErrorDescription<CR>
+map <space>d :action QuickJavaDoc<CR>
+map <space>b :action Back<CR>
+map <space>n :action Forward<CR>
+map <space>u :action ShowUsages<CR>
+
+map mq :action GotoBookmark1<CR>
+map mw :action GotoBookmark2<CR>
+map me :action GotoBookmark3<CR>
+map mr :action GotoBookmark4<CR>
+map mt :action GotoBookmark5<CR>
+
+map <leader>mq :action ToggleBookmark1<CR>
+map <leader>mw :action ToggleBookmark2<CR>
+map <leader>me :action ToggleBookmark3<CR>
+map <leader>mr :action ToggleBookmark4<CR>
+map <leader>mt :action ToggleBookmark5<CR>
+
