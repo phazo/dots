@@ -2,189 +2,94 @@
 " curl -fLo ~/.vim/autoload/plug.vim --create-dirs \
 "    https://raw.githubusercontent.com/junegunn/vim-plug/master/plug.vim
 
-set nocompatible
-set termguicolors
-set ruler          			" Ruler on
-set number relativenumber
-set laststatus=2   			" Always show the statusline
-set cmdheight=2    			" Make the command area two lines high
-set cursorline     			" Highlight current line
-set title          			" Set the title of the window in the terminal to the file
-set scrolloff=10
-set showmode
-set showcmd             " show command in bottom bar
+syntax on
 
-" ---------------
-" Behaviors
-" ---------------
-syntax enable
-set autoread          		" Automatically reload changes if detected
-set wildmenu           		" Turn on WiLd menu
-set wildmode=longest,full
-set hidden             		" Change buffer - without saving
-set history=768       	    " Number of things to remember in history.
-set confirm            		" Enable error files & error jumping.
-set clipboard+=unnamed 		" Yanks go on clipboard instead.
-set autowrite          		" Writes on make/shell commands
-"set timeoutlen=400     	" Time to wait for a command (after leader for example).
-set ttimeout
-set ttimeoutlen=100    		" Time to wait for a key sequence.
-set nofoldenable       		" Disable folding entirely.
-set foldlevelstart=99  		" I really don't like folds.
-set formatoptions=crql
-set iskeyword+=\$,-   		" Add extra characters that are valid parts of variables
-set nostartofline      		" Don't go to the start of the line after some commands
-set gdefault           		" this makes search/replace global by default
-set switchbuf=useopen  		" Switch to an existing buffer if one exists
-" set surround
-
-" ---------------
-" Text Format
-" ---------------
-set nowrap
-set backspace=indent,eol,start " Delete everything with backspace
-set tabstop=4       	" number of visual spaces per TAB
-set softtabstop=4   	" number of spaces in tab when editing
-set expandtab       	" tabs are spaces
-set shiftwidth=4
-" set shiftround
-" set cindent
-set autoindent
-" set smarttab
-
-set colorcolumn=121
-
-filetype plugin indent on
-
-" ---------------
-" Searching
-" ---------------
-set ignorecase 				" Case insensitive search
-set smartcase  				" Non-case sensitivse search
-set incsearch  				" Incremental search
-set hlsearch   				" Highlight search results
-set wildignore+=*.o,*.obj,*.exe,*.so,*.dll,*.pyc,.svn,.hg,.bzr,.git,
-  \.sass-cache,*.class,*.scssc,*.cssc,sprockets%*,*.lessc,*/node_modules/*,
-  \rake-pipeline-*
-  
-" ---------------
-" Visual
-" ---------------
-set showmatch   			" Show matching brackets.
-set matchtime=2 			" How many tenths of a second to blink
-
-" required by coc
+set guicursor=
+set relativenumber
+set nohlsearch
 set hidden
+set noerrorbells
+set tabstop=4 softtabstop=4
+set shiftwidth=4
+set expandtab
+set smartindent
+set nu
+set nowrap
+set smartcase
+set noswapfile
 set nobackup
-set nowritebackup
+set undodir=~/.config/nvim/undodir
+set undofile
+set incsearch
+set termguicolors
+set scrolloff=8
+set noshowmode
+
+" Give more space for displaying messages.
 set cmdheight=2
-set updatetime=300
+
+" Having longer updatetime (default is 4000 ms = 4 s) leads to noticeable
+" delays and poor user experience.
+set updatetime=50
+
+" Don't pass messages to |ins-completion-menu|.
 set shortmess+=c
-set signcolumn=yes
 
-
-
+set colorcolumn=120
+highlight ColorColumn ctermbg=0 guibg=lightgrey
  
-" Specify a directory for plugins
-" - Avoid using standard Vim directory names like 'plugin'
 call plug#begin()
+Plug 'tpope/vim-fugitive'
+Plug 'junegunn/gv.vim'
+Plug 'vim-utils/vim-man'
+Plug 'mbbill/undotree'
+Plug 'sheerun/vim-polyglot'
+Plug 'junegunn/fzf', { 'do': { -> fzf#install() } }
+Plug 'junegunn/fzf.vim'
+Plug 'stsewd/fzf-checkout.vim'
+Plug 'lvht/fzf-mru'
+"Plug 'gruvbox-community/gruvbox'
+Plug 'morhetz/gruvbox'
 Plug 'mhinz/vim-startify'
 Plug 'luochen1990/rainbow'
-Plug '907th/vim-auto-save'                              " auto save changes
 Plug 'junegunn/limelight.vim'
-
-"Plug 'vim-scripts/mru.vim'
+Plug 'tpope/vim-surround'
 Plug 'scrooloose/nerdtree'
 Plug 'junegunn/vim-plug'
 Plug 'amiorin/vim-project'
 Plug 'easymotion/vim-easymotion'
-"Plug 'vim-scripts/vim-signify'
-Plug 'tpope/vim-fugitive'
-Plug 'junegunn/gv.vim'
-"Plug 'kien/ctrlp.vim'
-
-"Plug 'itchyny/lightline.vim'
 Plug 'vim-airline/vim-airline'
-
 Plug 'junegunn/goyo.vim'
 Plug 'amix/vim-zenroom2'
-Plug 'terryma/vim-expand-region'
-"Plug 'nathanaelkane/vim-indent-guides'
-"Plug 'thaerkh/vim-indentguides'
 Plug 'Yggdroot/indentLine'
-Plug 'morhetz/gruvbox'
 Plug 'Townk/vim-autoclose'
-"Plug 'majutsushi/tagbar'
-"Plug 'rafi/awesome-vim-colorschemes'
 Plug 'prettier/vim-prettier'
-" Plug 'dense-analysis/ale'
-"Plug 'leafgarland/typescript-vim'
 Plug 'neoclide/coc.nvim', {'branch': 'release'}
-
 Plug 'HerringtonDarkholme/yats.vim'
-" Plug 'mhartington/nvim-typescript', {'do': './install.sh'}
- Plug 'Shougo/denite.nvim'
-" Plug 'Shougo/deoplete.nvim', { 'do': ':UpdateRemotePlugins' }
-"Plug 'vim-scripts/bufexplorer.zip'
-"Plug 'sheerun/vim-polyglot'
+Plug 'sheerun/vim-polyglot'
 Plug 'SirVer/ultisnips'
-Plug 'heavenshell/vim-jsdoc'
 Plug 'wesQ3/vim-windowswap'
 Plug 'troydm/zoomwintab.vim'
-"Plug 'taohexxx/lightline-solarized'
-"Plug 'joshdick/onedark.vim'
-"Plug 'rakr/vim-one'
-"Plug 'tomasr/molokai'
-"Plug 'ayu-theme/ayu-vim'
-" Plug 'bosr/fzy.vim'
-"Plug 'rking/ag.vim'
-"Plug 'cloudhead/neovim-fuzzy'
-"Plug 'junegunn/fzf', { 'dir': '~/.fzf', 'do': './install --no-bash' }
-"Plug 'junegunn/fzf.vim'
-"Plug 'lvht/fzf-mru'
-"Plug 'vim-scripts/LeaderF'
-"Plug 'wsdjeg/FlyGrep.vim'
-Plug 'Yggdroot/LeaderF', { 'do': './install.sh' }
-
-" LateX
-Plug 'xuhdev/vim-latex-live-preview'
-Plug 'lervag/vimtex'
-"Plug 'maxbrunsfeld/vim-yankstack'
-
-"Plug 'artur-shaik/vim-javacomplete2'
 
 call plug#end()
 
-"autocmd FileType java setlocal omnifunc=javacomplete#Complete
+" Python paths settings
+"let g:python3_host_prog = "/usr/bin/Python"
+"let g:python2_host_prog = "/usr/local/bin/python"
+"let g:python3_host_prog = "/usr/local/bin/python3" 
 
+colorscheme gruvbox
+set background=dark
 
-
-
-let g:python2_host_prog = "/usr/local/bin/python"
-let g:python3_host_prog = "/usr/local/bin/python3" 
-
-
-
+if executable('rg')
+    let g:rg_derive_root='true'
+endif
 
 let g:UltiSnipsExpandTrigger="<c-tab>"
-" let g:UltiSnipsJumpForwardTrigger="<tab>"
-" let g:UltiSnipsJumpBackwardTrigger="<s-tab>"
 let g:UltiSnipsListSnippets = "<c-s-tab>"
-
-" LeaderF configuration
-let g:Lf_HideHelp = 1
-let g:Lf_UseCache = 0
-let g:Lf_UseVersionControlTool = 0
-let g:Lf_IgnoreCurrentBufferName = 1
-" popup mode
-let g:Lf_WindowPosition = 'popup'
-let g:Lf_PreviewInPopup = 1
-let g:Lf_StlSeparator = { 'left': "\ue0b0", 'right': "\ue0b2", 'font':"DejaVu Sans Mono for Powerline" }
-let g:Lf_PreviewResult = {'Function': 0, 'BufTag': 0 }
 
 " :Rainbow parentheses
 let g:rainbow_active = 1 
-
 
 " ---------------
 " Mouse
@@ -195,45 +100,21 @@ set mouse=a    " Mouse in all modes
 " Better complete options to speed it up
 set complete=.,w,b,u,U 
   
-" ----------------------------------------
-" Mappings
-" ----------------------------------------
-
-" Set leader to space
-" Note: This line MUST come before any <leader> mappings
-let mapleader=','
-" let maplocalleader = ' '
+let loaded_matchparen = 1
   
 " Integrate with system clipboard
 set clipboard=unnamedplus,unnamed
 
+let g:fzf_layout = { 'window': { 'width': 0.8, 'height': 0.8 } }
+let $FZF_DEFAULT_OPTS='--reverse'
+let g:fzf_checkout_track_key = 'ctrl-t'
 
 autocmd FileType typescript setlocal formatprg=prettier\ --parser\ typescript
 autocmd FileType tex setl updatetime=1
 
-let g:livepreview_previewer = 'open -a zathura'
-
-"let g:ale_linters = {
-"\   'javascript': ['eslint'],
-"\   'typescript': ['tsserver', 'tslint'],
-"\   'vue': ['eslint']
-"\}
-
-
-"let g:ale_fixers = {
-"\    'javascript': ['eslint'],
-"\   'typescript': ['prettier', 'tslint'],
-"\    'scss': ['prettier'],
-"\    'html': ['prettier']
-"\}
-" let g:ale_fix_on_save = 1
-
 let g:indent_guides_guide_size = 1
-
 let g:indent_guides_color_change_percent = 1
 let g:indent_guides_enable_on_vim_startup = 1
-
-"inoremap <silent><expr> <c-space> coc#refresh()
 
 let g:coc_global_extensions = [
         \ 'coc-css',
@@ -300,7 +181,6 @@ augroup mygroup
 augroup end
 
 
-
 " Use `:Format` to format current buffer
 command! -nargs=0 Format :call CocAction('format')
 
@@ -314,47 +194,35 @@ command! -nargs=0 OR   :call     CocAction('runCommand', 'editor.action.organize
 set statusline^=%{coc#status()}%{get(b:,'coc_current_function','')}
 
 
-noremap <silent> <space>p  :<C-u>CocList -A --normal yank<cr>
-imap <C-l> <Plug>(coc-snippets-expand)
 " COC end SETUP
 " -----------------------------------------------------------------------------
-
-
-
-" colorscheme deus 
-colorscheme gruvbox
-set background=dark
-"let g:lightline = {
-"      \ 'colorscheme': 'one',
-"      \ }
 
 " Nerd Tree options
 let NERDTreeShowHidden=1  "  Always show dot files
 let NERDTreeQuitOnOpen=1
 
+
+""" MAPPINGS
+let mapleader=','
+
+noremap <silent> <space>p  :<C-u>CocList -A --normal yank<cr>
+imap <C-l> <Plug>(coc-snippets-expand)
+
 " Mappings
 
 noremap H ^
 noremap L $
-" D deletes to the end of the line, and Y yanks to end of line
 nnoremap D d$
 nnoremap Y y$
-" Create newlines without entering insert mode
 nnoremap go o<Esc>k
 nnoremap gO O<Esc>j
 nmap zk O<Esc>j  
-" Scroll larger amounts with C-j / C-k
 nnoremap gj 15gjzz
 nnoremap gk 15gkzz
 vnoremap gj 15gjzz
 vnoremap gk 15gkzz
-" Let's make escape better, together.
 inoremap jk <Esc>
-inoremap JK <Esc>
-inoremap Jk <Esc>
-inoremap jK <Esc>
 nnoremap <esc><esc> :noh<return>
-
 
 " edit/save ideavimrc and load vimrc bindings
 map <leader><leader>e :vsp /Users/phazo/.config/nvim/init.vim<CR>
@@ -365,16 +233,23 @@ map <leader><leader>s :source /Users/phazo/.config/nvim/init.vim<CR>
 " Split window vertically or horizontally *and* switch to the new split!
 map <leader>h :split<Bar>:wincmd j<CR>:wincmd =<CR>
 map <leader>v :vsplit<Bar>:wincmd l<CR>:wincmd =<CR>
-map <Leader>r :LeaderfMru<CR>
-map <leader>f :LeaderfFile<CR>
-map <Leader>e :LeaderfBuffer<CR>
-"map <leader>t :FlyGrep<CR>
+map <Leader>r :FZFMru<CR>
+map <leader>f :Files<CR>
+map <Leader>e :Buffers<CR>
+map <leader>t :Rg<CR>
+map <leader>ghw :Rg <C-R>=expand("<cword>")<CR><CR>
+nnoremap <leader>prw :CocSearch <C-R>=expand("<cword>")<CR><CR>
+nnoremap <leader>pw :Rg <C-R>=expand("<cword>")<CR><CR>
+nnoremap <leader>u :UndotreeShow<CR>
+nnoremap <C-p> :GFiles<CR>
+nnoremap <leader>gc :GCheckout<cr>
+nmap <leader>gs :G<CR>
+nmap <leader>gv :GV<CR>
 
 nnoremap <leader>x :close<CR>
 map <Leader>w  :NERDTreeFind<CR>
 map <leader>n :bn<CR>
 map <leader>p :bp<CR>
-map <leader>gg :GV<CR>
 map <Leader>q :Goyo 120<CR>;
 map <Leader>z :ZoomWinTabToggle<CR>
 " Show all diagnostics
@@ -405,38 +280,29 @@ nmap <space><space>l <Plug>(easymotion-overwin-line)
 map  <space><space>w <Plug>(easymotion-bd-w)
 nmap <space><space>w <Plug>(easymotion-overwin-w)
 
-" JsDoc
-nmap <space>jd <Plug>(jsdoc)
-
-map <space>w <Plug>(expand_region_expand)
-
-" Use `[g` and `]g` to navigate diagnostics
-nmap <silent> <space>[ <Plug>(coc-diagnostic-prev)
-nmap <silent> <space>] <Plug>(coc-diagnostic-next)
-
-" Remap for rename current word
-nmap <space>re <Plug>(coc-rename)
-" Remap keys for gotos
 nmap <space>gd <Plug>(coc-definition)
 nmap <space>gy <Plug>(coc-type-definition)
 nmap <space>gi <Plug>(coc-implementation)
 nmap <space>gr <Plug>(coc-references)
-" Use K to show documentation in preview window
+nmap <space>rr <Plug>(coc-rename)
+nmap <silent> <space>[ <Plug>(coc-diagnostic-prev)
+nmap <silent> <space>] <Plug>(coc-diagnostic-next)
 nnoremap <silent> <space>d :call <SID>show_documentation()<CR>
 " Remap for format selected region
 xmap <space>fs  <Plug>(coc-format-selected)
 nmap <space>fs  <Plug>(coc-format-selected)
-nmap <space>ff :call CocAction('runCommand', 'prettier.formatFile')<CR>
+nmap <space>ff :Format<CR>
 nmap <space>fl :CocFix<CR>
+nmap <space>fi :OR<CR>
 " Fix autofix problem of current line
 nmap <space>qf  <Plug>(coc-fix-current)
 " Using CocList
 " Find symbol of current document
 nnoremap <silent> <space>o  :<C-u>CocList outline<cr>
 " Search workspace symbols
-nnoremap <silent> <leader>t  :<c-u>coclist -i symbols<cr>
+"nnoremap <silent> <leader>t  :<c-u>coclist -i symbols<cr>
 " resume latest coc list
-nnoremap <silent> <space>rp  :<C-u>CocListResume<CR>
+"nnoremap <silent> <space>rp  :<C-u>CocListResume<CR>
 imap ;; <ESC>A;<ESC>
 
 map <leader>ma mA
