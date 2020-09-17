@@ -57,7 +57,8 @@ Plug 'tpope/vim-surround'
 Plug 'scrooloose/nerdtree'
 Plug 'junegunn/vim-plug'
 Plug 'amiorin/vim-project'
-Plug 'easymotion/vim-easymotion'
+"Plug 'easymotion/vim-easymotion'
+Plug 'justinmk/vim-sneak'
 Plug 'vim-airline/vim-airline'
 Plug 'junegunn/goyo.vim'
 Plug 'amix/vim-zenroom2'
@@ -72,6 +73,9 @@ Plug 'wesQ3/vim-windowswap'
 Plug 'troydm/zoomwintab.vim'
 
 call plug#end()
+
+" vim-sneak
+let g:sneak#label = 1
 
 " Python paths settings
 "let g:python3_host_prog = "/usr/bin/Python"
@@ -271,14 +275,14 @@ map <space>; A;<ESC>
 map <space>al :ALEFix<CR>
 
 " <Leader><Leader>f{char} to move to {char}
-map  <space><space>f <Plug>(easymotion-bd-f)
-nmap <space><space>f <Plug>(easymotion-overwin-f)
+"map  <space><space>f <Plug>(easymotion-bd-f)
+"nmap <space><space>f <Plug>(easymotion-overwin-f)
 " Move to line
-map <space><space>l <Plug>(easymotion-bd-jk)
-nmap <space><space>l <Plug>(easymotion-overwin-line)
+"map <space><space>l <Plug>(easymotion-bd-jk)
+"nmap <space><space>l <Plug>(easymotion-overwin-line)
 " Move to word
-map  <space><space>w <Plug>(easymotion-bd-w)
-nmap <space><space>w <Plug>(easymotion-overwin-w)
+"map  <space><space>w <Plug>(easymotion-bd-w)
+"nmap <space><space>w <Plug>(easymotion-overwin-w)
 
 nmap <space>gd <Plug>(coc-definition)
 nmap <space>gy <Plug>(coc-type-definition)
@@ -318,3 +322,10 @@ map <leader>mw mW
 map mw `W
 map <leader>me mE
 map me `E
+
+
+map <leader><leader>ju :CocCommand java.updateLanguageServer<cr>
+map <leader><leader>jl :CocCommand workspace.showOutput java<cr>
+map <leader><leader>cw :CocCommand java.clean.workspace<cr>
+map <leader><leader>jsl :CocCommand java.open.serverLog<cr>
+map <leader><leader>uu :CocCommand java.projectConfiguration.update<cr>
