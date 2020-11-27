@@ -68,9 +68,11 @@ Plug 'prettier/vim-prettier'
 Plug 'neoclide/coc.nvim', {'branch': 'release'}
 Plug 'HerringtonDarkholme/yats.vim'
 Plug 'sheerun/vim-polyglot'
-Plug 'SirVer/ultisnips'
+"Plug 'SirVer/ultisnips'
 Plug 'wesQ3/vim-windowswap'
 Plug 'troydm/zoomwintab.vim'
+
+ Plug 'airblade/vim-rooter'
 
 call plug#end()
 
@@ -328,4 +330,6 @@ map <leader><leader>ju :CocCommand java.updateLanguageServer<cr>
 map <leader><leader>jl :CocCommand workspace.showOutput java<cr>
 map <leader><leader>cw :CocCommand java.clean.workspace<cr>
 map <leader><leader>jsl :CocCommand java.open.serverLog<cr>
-map <leader><leader>uu :CocCommand java.projectConfiguration.update<cr>
+map <leader><leader>uu :CocCommand java.projectConfiguration.update<cr>;
+
+let g:rooter_patterns = ['.git', 'hot-app']
