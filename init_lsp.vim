@@ -74,7 +74,7 @@ Plug 'troydm/zoomwintab.vim'
 
 Plug 'neovim/nvim-lspconfig'
 Plug 'nvim-lua/completion-nvim'
-" Plug 'nvim-treesitter/nvim-treesitter'
+Plug 'nvim-treesitter/nvim-treesitter'
 
 
  Plug 'mhinz/vim-signify'
@@ -243,15 +243,15 @@ let g:completion_trigger_on_delete = 1
 
 "require'lspconfig'.jdtls.setup{ on_attach=require'completion'.on_attach } 
 
-" :lua << EOF
-"   require'nvim-treesitter.configs'.setup {
-"     ensure_installed = "maintained",
-"     highlight = {
-"       enable = true,
-"       disable = { },
-"     },
-"   }
-" EOF
+:lua << EOF
+  require'nvim-treesitter.configs'.setup {
+    ensure_installed = "maintained",
+    highlight = {
+      enable = true,
+      disable = { },
+    },
+  }
+EOF
 
 :lua << EOF
   local on_attach = function(_, bufnr)
