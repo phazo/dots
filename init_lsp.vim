@@ -57,6 +57,7 @@ Plug 'tpope/vim-surround'
 Plug 'scrooloose/nerdtree'
 Plug 'junegunn/vim-plug'
 Plug 'amiorin/vim-project'
+"Plug 'dbakker/vim-projectroot'
 "Plug 'easymotion/vim-easymotion'
 Plug 'justinmk/vim-sneak'
 Plug 'vim-airline/vim-airline'
@@ -73,7 +74,10 @@ Plug 'troydm/zoomwintab.vim'
 
 Plug 'neovim/nvim-lspconfig'
 Plug 'nvim-lua/completion-nvim'
+" Plug 'nvim-treesitter/nvim-treesitter'
 
+
+ Plug 'mhinz/vim-signify'
 
 call plug#end()
 
@@ -116,7 +120,7 @@ set clipboard=unnamedplus,unnamed
 
 let g:fzf_layout = { 'window': { 'width': 0.8, 'height': 0.8 } }
 let $FZF_DEFAULT_OPTS='--reverse'
-let g:fzf_checkout_track_key = 'ctrl-t'
+
 
 autocmd FileType typescript setlocal formatprg=prettier\ --parser\ typescript
 autocmd FileType tex setl updatetime=1
@@ -124,9 +128,6 @@ autocmd FileType tex setl updatetime=1
 let g:indent_guides_guide_size = 1
 let g:indent_guides_color_change_percent = 1
 let g:indent_guides_enable_on_vim_startup = 1
-
-" Add status line support, for integration with other plugin, checkout `:h coc-status`
-set statusline^=%{coc#status()}%{get(b:,'coc_current_function','')}
 
 " Nerd Tree options
 let NERDTreeShowHidden=1  "  Always show dot files
@@ -201,7 +202,7 @@ nnoremap <silent> <space>gt   <cmd>lua vim.lsp.buf.type_definition()<CR>
 nnoremap <silent> gr    <cmd>lua vim.lsp.buf.references()<CR>
 nnoremap <silent> g0    <cmd>lua vim.lsp.buf.document_symbol()<CR>
 nnoremap <silent> gW    <cmd>lua vim.lsp.buf.workspace_symbol()<CR>
-"nnoremap <silent> gd    <cmd>lua vim.lsp.buf.declaration()<CR>
+nnoremap <silent> gd    <cmd>lua vim.lsp.buf.declaration()<CR>
 
 
 " <Leader><Leader>f{char} to move to {char}
@@ -217,10 +218,6 @@ nnoremap <silent> gW    <cmd>lua vim.lsp.buf.workspace_symbol()<CR>
 nmap <space>ff :Format<CR>
 nmap <space>fl :CocFix<CR>
 nmap <space>fi :OR<CR>
-" Fix autofix problem of current line
-"nnoremap <silent> <leader>t  :<c-u>coclist -i symbols<cr>
-" resume latest coc list
-"nnoremap <silent> <space>rp  :<C-u>CocListResume<CR>
 imap ;; <ESC>A;<ESC>
 
 map <leader>ma mA
@@ -238,7 +235,30 @@ map <leader>me mE
 map me `E
 
 set completeopt=menuone,noinsert,noselect
+"set cot=menuone,noinsert,noselect shm+=c
 let g:completion_matching_strategy_list = ['exact', 'substring', 'fuzzy']
-"lua require'nvim_lsp'.jdtls.setup{ on_attach=require'completion'.on_attach } 
-lua require'nvim_lsp'.jdtls.setup{ on_attach=require'completion'.on_attach,  init_options = { jvm_args = {"-javaagent:/Users/phazo/.m2/repository/org/projectlombok/lombok/1.18.8/lombok-1.18.8.jar", "-Xbootclasspath/a:/Users/phazo/.m2/repository/org/projectlombok/lombok/1.18.8/lombok-1.18.8.jar"} } } 
-lua require'nvim_lsp'.tsserver.setup{ on_attach=require'completion'.on_attach }
+let g:completion_matching_smart_case = 1
+let g:completion_trigger_on_delete = 1
+
+
+"require'lspconfig'.jdtls.setup{ on_attach=require'completion'.on_attach } 
+
+" :lua << EOF
+"   require'nvim-treesitter.configs'.setup {
+"     ensure_installed = "maintained",
+"     highlight = {
+"       enable = true,
+"       disable = { },
+"     },
+"   }
+" EOF
+
+:lua << EOF
+  local on_attach = function(_, bufnr)
+    require('completion').on_attach()
+  end   
+    require'lspconfig'.jdtls.setup{ on_attach=on_attach,  init_options = { jvm_args = {"-javaagent:/Users/phazo/.m2/repository/org/projectlombok/lombok/1.18.8/lombok-1.18.8.jar", "-Xbootclasspath/a:/Users/phazo/.m2/repository/org/projectlombok/lombok/1.18.8/lombok-1.18.8.jar"} } }     
+    require'lspconfig'.tsserver.setup{ on_attach=on_attach }
+EOF
+" require'lspconfig'.jdtls.setup{ on_attach=on_attach } 
+
