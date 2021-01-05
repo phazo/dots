@@ -2,6 +2,9 @@
 " curl -fLo ~/.vim/autoload/plug.vim --create-dirs \
 "    https://raw.githubusercontent.com/junegunn/vim-plug/master/plug.vim
 
+" WINDOWS
+"au VimEnter * GuiPopupmenu 0
+
 syntax on
 
 set guicursor=
@@ -37,7 +40,10 @@ set shortmess+=c
 
 set colorcolumn=120
 highlight ColorColumn ctermbg=0 guibg=lightgrey
- 
+
+
+
+
 call plug#begin()
 Plug 'tpope/vim-fugitive'
 Plug 'junegunn/gv.vim'
@@ -49,11 +55,12 @@ Plug 'junegunn/fzf', { 'do': { -> fzf#install() } }
 Plug 'junegunn/fzf.vim'
 Plug 'stsewd/fzf-checkout.vim'
 Plug 'lvht/fzf-mru'
+Plug 'antoinemadec/coc-fzf'
 
-"Plug 'gruvbox-community/gruvbox'
+Plug 'gruvbox-community/gruvbox'
 
-Plug 'morhetz/gruvbox'
-Plug 'lifepillar/vim-gruvbox8'
+"Plug 'morhetz/gruvbox'
+"Plug 'lifepillar/vim-gruvbox8'
 
 Plug 'mhinz/vim-startify'
 Plug 'luochen1990/rainbow'
@@ -218,7 +225,7 @@ let NERDTreeQuitOnOpen=1
 """ MAPPINGS
 let mapleader=','
 
-noremap <silent> <space>p  :<C-u>CocList -A --normal yank<cr>
+noremap <silent> <space>p  :<C-u>CocFzfList yank<cr>
 imap <C-l> <Plug>(coc-snippets-expand)
 
 " Mappings
@@ -266,9 +273,9 @@ map <leader>p :bp<CR>
 map <Leader>q :Goyo 120<CR>;
 map <Leader>z :ZoomWinTabToggle<CR>
 " Show all diagnostics
-nnoremap <silent> <leader>rd  :<C-u>CocList diagnostics<cr>
+nnoremap <silent> <leader>rd  :<C-u>CocFzfList diagnostics --current-buf<cr>
 " Manage extensions
-nnoremap <silent> <leader>re  :<C-u>CocList extensions<cr>
+nnoremap <silent> <leader>re  :<C-u>CocFzfList extensions<cr>
 
 
 nnoremap <space>s :w<CR>
@@ -325,7 +332,8 @@ xmap <silent> <C-s> <Plug>(coc-range-select)
 
 " Using CocList
 " Find symbol of current document
-nnoremap <silent> <space>o  :<C-u>CocList outline<cr>
+nnoremap <silent> <space>o  :CocFzfList outline<cr>
+nnoremap <silent> <leader>l  :CocFzfList<cr>
 " Search workspace symbols
 "nnoremap <silent> <leader>t  :<c-u>coclist -i symbols<cr>
 " resume latest coc list
@@ -360,4 +368,3 @@ let g:rooter_patterns = ['.git', 'hot-app']
 
 
 lua require'nvim-treesitter.configs'.setup { ensure_installed = "maintained", highlight = {enable = true, disable = { },},}
-
