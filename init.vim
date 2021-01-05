@@ -44,12 +44,17 @@ Plug 'junegunn/gv.vim'
 Plug 'vim-utils/vim-man'
 Plug 'mbbill/undotree'
 Plug 'sheerun/vim-polyglot'
+
 Plug 'junegunn/fzf', { 'do': { -> fzf#install() } }
 Plug 'junegunn/fzf.vim'
 Plug 'stsewd/fzf-checkout.vim'
 Plug 'lvht/fzf-mru'
+
 "Plug 'gruvbox-community/gruvbox'
+
 Plug 'morhetz/gruvbox'
+Plug 'lifepillar/vim-gruvbox8'
+
 Plug 'mhinz/vim-startify'
 Plug 'luochen1990/rainbow'
 Plug 'junegunn/limelight.vim'
@@ -72,7 +77,10 @@ Plug 'sheerun/vim-polyglot'
 Plug 'wesQ3/vim-windowswap'
 Plug 'troydm/zoomwintab.vim'
 
- Plug 'airblade/vim-rooter'
+Plug 'airblade/vim-rooter'
+Plug 'mhinz/vim-signify'
+
+Plug 'nvim-treesitter/nvim-treesitter', {'do': ':TSUpdate'}
 
 call plug#end()
 
@@ -113,7 +121,6 @@ set clipboard=unnamedplus,unnamed
 
 let g:fzf_layout = { 'window': { 'width': 0.8, 'height': 0.8 } }
 let $FZF_DEFAULT_OPTS='--reverse'
-let g:fzf_checkout_track_key = 'ctrl-t'
 
 autocmd FileType typescript setlocal formatprg=prettier\ --parser\ typescript
 autocmd FileType tex setl updatetime=1
@@ -302,6 +309,20 @@ nmap <space>fl :CocFix<CR>
 nmap <space>fi :OR<CR>
 " Fix autofix problem of current line
 nmap <space>qf  <Plug>(coc-fix-current)
+
+" Applying codeAction to the selected region.
+" Example: `<leader>aap` for current paragraph
+xmap <leader>a  <Plug>(coc-codeaction-selected)
+nmap <leader>a  <Plug>(coc-codeaction-selected)
+
+" Remap keys for applying codeAction to the current buffer.
+nmap <leader>ac  <Plug>(coc-codeaction)
+" Use CTRL-S for selections ranges.
+" Requires 'textDocument/selectionRange' support of language server.
+nmap <silent> <C-s> <Plug>(coc-range-select)
+xmap <silent> <C-s> <Plug>(coc-range-select)
+
+
 " Using CocList
 " Find symbol of current document
 nnoremap <silent> <space>o  :<C-u>CocList outline<cr>
@@ -309,6 +330,9 @@ nnoremap <silent> <space>o  :<C-u>CocList outline<cr>
 "nnoremap <silent> <leader>t  :<c-u>coclist -i symbols<cr>
 " resume latest coc list
 "nnoremap <silent> <space>rp  :<C-u>CocListResume<CR>
+
+"
+"
 imap ;; <ESC>A;<ESC>
 
 map <leader>ma mA
@@ -333,3 +357,7 @@ map <leader><leader>jsl :CocCommand java.open.serverLog<cr>
 map <leader><leader>uu :CocCommand java.projectConfiguration.update<cr>;
 
 let g:rooter_patterns = ['.git', 'hot-app']
+
+
+lua require'nvim-treesitter.configs'.setup { ensure_installed = "maintained", highlight = {enable = true, disable = { },},}
+
