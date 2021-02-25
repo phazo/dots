@@ -53,8 +53,8 @@ Plug 'sheerun/vim-polyglot'
 
 Plug 'junegunn/fzf', { 'do': { -> fzf#install() } }
 Plug 'junegunn/fzf.vim'
-Plug 'stsewd/fzf-checkout.vim'
-Plug 'lvht/fzf-mru'
+"Plug 'stsewd/fzf-checkout.vim'
+"Plug 'lvht/fzf-mru'
 Plug 'antoinemadec/coc-fzf'
 
 Plug 'gruvbox-community/gruvbox'
@@ -88,6 +88,12 @@ Plug 'airblade/vim-rooter'
 Plug 'mhinz/vim-signify'
 
 Plug 'nvim-treesitter/nvim-treesitter', {'do': ':TSUpdate'}
+
+Plug 'nvim-lua/popup.nvim'
+Plug 'nvim-lua/plenary.nvim'
+Plug 'nvim-telescope/telescope.nvim'
+
+
 
 call plug#end()
 
@@ -220,7 +226,7 @@ set statusline^=%{coc#status()}%{get(b:,'coc_current_function','')}
 " Nerd Tree options
 let NERDTreeShowHidden=1  "  Always show dot files
 let NERDTreeQuitOnOpen=1
-
+let g:NERDTreeWinSize=51
 
 """ MAPPINGS
 let mapleader=','
@@ -245,26 +251,30 @@ inoremap jk <Esc>
 nnoremap <esc><esc> :noh<return>
 
 " edit/save ideavimrc and load vimrc bindings
-map <leader><leader>e :vsp /Users/phazo/.config/nvim/init.vim<CR>
-map <leader><leader>s :source /Users/phazo/.config/nvim/init.vim<CR>
-"map <leader><leader>e :vsp c:\Users\bpater\AppData\Local\nvim\init.vim<CR>
-"map <leader><leader>s :source c:\Users\bpater\AppData\Local\nvim\init.vim<CR>
+map <leader><leader>e :vsp $MYVIMRC<CR>
+map <leader><leader>s :source $MYVIMRC<CR>
 
 " Split window vertically or horizontally *and* switch to the new split!
 map <leader>h :split<Bar>:wincmd j<CR>:wincmd =<CR>
 map <leader>v :vsplit<Bar>:wincmd l<CR>:wincmd =<CR>
-map <Leader>r :FZFMru<CR>
-map <leader>f :Files<CR>
-map <Leader>e :Buffers<CR>
-map <leader>t :Rg<CR>
-map <leader>ghw :Rg <C-R>=expand("<cword>")<CR><CR>
-nnoremap <leader>prw :CocSearch <C-R>=expand("<cword>")<CR><CR>
-nnoremap <leader>pw :Rg <C-R>=expand("<cword>")<CR><CR>
 nnoremap <leader>u :UndotreeShow<CR>
-nnoremap <C-p> :GFiles<CR>
-nnoremap <leader>gc :GCheckout<cr>
+
+nnoremap <leader>gch :GCheckout<cr>
 nmap <leader>gs :G<CR>
 nmap <leader>gv :GV<CR>
+
+" Telescope
+map <Leader>r :Telescope oldfiles<CR>
+map <leader>f :Telescope git_files<CR>
+map <Leader>e :Telescope buffers<CR>
+map <leader>t :Telescope live_grep<CR>;
+map <leader>m :Telescope marks<CR>
+map <space>f :Telescope current_buffer_fuzzy_find<CR>
+
+map <leader>gc :Telescope git_commits<CR>
+map <leader>gbc :Telescope git_bcomits<CR>
+map <leader>gb :Telescope git_branches<CR>
+
 
 nnoremap <leader>x :close<CR>
 map <Leader>w  :NERDTreeFind<CR>
@@ -343,18 +353,18 @@ nnoremap <silent> <leader>l  :CocFzfList<cr>
 "
 imap ;; <ESC>A;<ESC>
 
-map <leader>ma mA
+map <space>ma mA
 map ma `A
-map <leader>ms mS
+map <space>ms mS
 map ms `S
-map <leader>md mD
+map <space>md mD
 map md `D
 
-map <leader>mq mQ
+map <space>mq mQ
 map mq `Q
-map <leader>mw mW
+map <space>mw mW
 map mw `W
-map <leader>me mE
+map <space>me mE
 map me `E
 
 
@@ -368,3 +378,5 @@ let g:rooter_patterns = ['.git', 'hot-app']
 
 
 lua require'nvim-treesitter.configs'.setup { ensure_installed = "maintained", highlight = {enable = true, disable = { },},}
+
+lua local actions = require('telescope.actions') require('telescope').setup{ defaults = { mappings = { i = { ["<esc>"] = actions.close }, }, } }
