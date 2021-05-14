@@ -7,4 +7,7 @@
   // { "key": "jk", "command": "vim.esc", when: "insertMode" },
   { "key": "<space>h", "command": "window.moveLeft", when: "normalMode" },
   { "key": "<space>l", "command": "window.moveRight", when: "normalMode" },
+  { "key": "<space>s", "command": ":w", when: "normalMode" },
+  { "key": "<Leader>f", "command": "workbench.action.quickOpen"},
+  { "key": "<Leader>a", "command": "workbench.action.showCommands"}
 ]
