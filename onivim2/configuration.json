@@ -1,5 +1,5 @@
 {
-  "java.jdt.ls.vmargs": "-XX:+UseParallelGC -XX:GCTimeRatio=4 -XX:AdaptiveSizePolicyWeight=90 -Dsun.zip.disableMemoryMapping=true -Xmx1G -Xms100m -javaagent:\"c:\\Users\\bpater\\AppData\\Local\\Oni2\\extensions\\GabrielBB.vscode-lombok-1.0.0\\server\\lombok.jar\"",
+  "java.jdt.ls.vmargs": "-XX:+UseParallelGC -XX:GCTimeRatio=4 -XX:AdaptiveSizePolicyWeight=90 -Dsun.zip.disableMemoryMapping=true -Xmx1G -Xms100m -javaagent:\"/Users/phazo/.config/oni2/extensions/cool2k.vscode-lombok-1.0.2/server/lombok.jar\"",
   "workbench.colorTheme": "Gruvbox Dark Soft",
   "java.project.importOnFirstTimeStartup": "automatic",
   "files.exclude": {
@@ -38,6 +38,5 @@
   "workbench.statusBar.visible": true,
   "workbench.tree.indent": 2,
   "vim.useSystemClipboard": ["yank"],
-  "files.exclude": ["oneclient/node_modules"],
   "vim.leader": ","
 }
