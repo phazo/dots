@@ -1,7 +1,6 @@
 {
+  "java.jdt.ls.vmargs": "-XX:+UseParallelGC -XX:GCTimeRatio=4 -XX:AdaptiveSizePolicyWeight=90 -Dsun.zip.disableMemoryMapping=true -Xmx1G -Xms100m -javaagent:\"c:\\Users\\bpater\\AppData\\Local\\Oni2\\extensions\\GabrielBB.vscode-lombok-1.0.0\\server\\lombok.jar\"",
   "workbench.colorTheme": "Gruvbox Dark Soft",
-  "java.jdt.ls.vmargs":
-    "-XX:+UseParallelGC -XX:GCTimeRatio=4 -XX:AdaptiveSizePolicyWeight=90 -Dsun.zip.disableMemoryMapping=true -Xmx1G -Xms100m -javaagent:\"/Users/phazo/.config/oni2/extensions/cool2k.vscode-lombok-1.0.2/server/lombok.jar\"",
   "java.project.importOnFirstTimeStartup": "automatic",
   "files.exclude": {
     "**/.classpath": true,
@@ -23,7 +22,8 @@
   "editor.minimap.showSlider": true,
   "editor.renderIndentGuides": true,
   "editor.renderWhitespace": "none",
-  "editor.cursorSurroundingLines": 5,
+  "editor.cursorSurroundingLines": 10,
+  "editor.snippletSuggestions": true,
   "editor.codeLens": true,
   "editor.wordWrap": false,
   "editor.rulers": [],
@@ -37,5 +37,7 @@
   "workbench.sideBar.visible": true,
   "workbench.statusBar.visible": true,
   "workbench.tree.indent": 2,
-  "vim.useSystemClipboard": [ "yank" ]
+  "vim.useSystemClipboard": ["yank"],
+  "files.exclude": ["oneclient/node_modules"],
+  "vim.leader": ","
 }
