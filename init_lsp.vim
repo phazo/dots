@@ -1,6 +1,9 @@
 " Plug
 " curl -fLo ~/.vim/autoload/plug.vim --create-dirs \
 "    https://raw.githubusercontent.com/junegunn/vim-plug/master/plug.vim
+" WINDOWS
+au VimEnter * GuiPopupmenu 0
+
 
 syntax on
 
@@ -44,12 +47,9 @@ Plug 'junegunn/gv.vim'
 Plug 'vim-utils/vim-man'
 Plug 'mbbill/undotree'
 Plug 'sheerun/vim-polyglot'
-Plug 'junegunn/fzf', { 'do': { -> fzf#install() } }
-Plug 'junegunn/fzf.vim'
-Plug 'stsewd/fzf-checkout.vim'
-Plug 'lvht/fzf-mru'
-"Plug 'gruvbox-community/gruvbox'
-Plug 'morhetz/gruvbox'
+
+Plug 'gruvbox-community/gruvbox'
+"Plug 'morhetz/gruvbox'
 Plug 'mhinz/vim-startify'
 Plug 'luochen1990/rainbow'
 Plug 'junegunn/limelight.vim'
@@ -66,19 +66,25 @@ Plug 'amix/vim-zenroom2'
 Plug 'Yggdroot/indentLine'
 Plug 'Townk/vim-autoclose'
 Plug 'prettier/vim-prettier'
-Plug 'HerringtonDarkholme/yats.vim'
-Plug 'sheerun/vim-polyglot'
-Plug 'SirVer/ultisnips'
+
+
 Plug 'wesQ3/vim-windowswap'
 Plug 'troydm/zoomwintab.vim'
 
 Plug 'neovim/nvim-lspconfig'
-Plug 'nvim-lua/completion-nvim'
-Plug 'nvim-treesitter/nvim-treesitter'
+Plug 'hrsh7th/nvim-compe'
+"Plug 'nvim-lua/completion-nvim'
+Plug 'mfussenegger/nvim-jdtls'
 
+Plug 'nvim-treesitter/nvim-treesitter', {'do': ':TSUpdate'}
 
- Plug 'mhinz/vim-signify'
+Plug 'nvim-lua/popup.nvim'
+Plug 'nvim-lua/plenary.nvim'
+Plug 'nvim-telescope/telescope.nvim'
+Plug 'nvim-telescope/telescope-fzy-native.nvim'
 
+Plug 'maxbrunsfeld/vim-yankstack'
+Plug 'iamcco/markdown-preview.nvim', { 'do': { -> mkdp#util#install() }, 'for': ['markdown', 'vim-plug']}
 call plug#end()
 
 
@@ -153,20 +159,17 @@ inoremap jk <Esc>
 nnoremap <esc><esc> :noh<return>
 
 " edit/save ideavimrc and load vimrc bindings
-map <leader><leader>e :vsp /Users/phazo/.config/nvim/init.vim<CR>
-map <leader><leader>s :source /Users/phazo/.config/nvim/init.vim<CR>
+" edit/save ideavimrc and load vimrc bindings
+map <leader><leader>e :vsp $MYVIMRC<CR>
+map <leader><leader>s :source $MYVIMRC<CR>
 "map <leader><leader>e :vsp c:\Users\bpater\AppData\Local\nvim\init.vim<CR>
 "map <leader><leader>s :source c:\Users\bpater\AppData\Local\nvim\init.vim<CR>
 
 " Split window vertically or horizontally *and* switch to the new split!
 map <leader>h :split<Bar>:wincmd j<CR>:wincmd =<CR>
 map <leader>v :vsplit<Bar>:wincmd l<CR>:wincmd =<CR>
-map <Leader>r :FZFMru<CR>
-map <leader>f :Files<CR>
-map <Leader>e :Buffers<CR>
-map <leader>t :Rg<CR>
-map <leader>ghw :Rg <C-R>=expand("<cword>")<CR><CR>
-nnoremap <leader>pw :Rg <C-R>=expand("<cword>")<CR><CR>
+
+
 nnoremap <leader>u :UndotreeShow<CR>
 nnoremap <C-p> :GFiles<CR>
 nnoremap <leader>gc :GCheckout<cr>
@@ -193,16 +196,35 @@ map <space><Enter> i<Enter><ESC>
 map <space>; A;<ESC>
 map <space>al :ALEFix<CR>
 
+  " See `:help vim.lsp.*` for documentation on any of the below functions
+nnoremap gD <Cmd>lua vim.lsp.buf.declaration()<CR>
+nnoremap gd <Cmd>lua vim.lsp.buf.definition()<CR>
+nnoremap K <Cmd>lua vim.lsp.buf.hover()<CR>
+nnoremap gi <cmd>lua vim.lsp.buf.implementation()<CR>
+nnoremap gr <cmd>lua vim.lsp.buf.references()<CR>
 
-nnoremap <silent> <space>gd <cmd>lua vim.lsp.buf.definition()<CR>
-nnoremap <silent> K     <cmd>lua vim.lsp.buf.hover()<CR>
-nnoremap <silent> <space>gi    <cmd>lua vim.lsp.buf.implementation()<CR>
-nnoremap <silent> <space>gs <cmd>lua vim.lsp.buf.signature_help()<CR>
-nnoremap <silent> <space>gt   <cmd>lua vim.lsp.buf.type_definition()<CR>
-nnoremap <silent> gr    <cmd>lua vim.lsp.buf.references()<CR>
-nnoremap <silent> g0    <cmd>lua vim.lsp.buf.document_symbol()<CR>
-nnoremap <silent> gW    <cmd>lua vim.lsp.buf.workspace_symbol()<CR>
-nnoremap <silent> gd    <cmd>lua vim.lsp.buf.declaration()<CR>
+nnoremap gh <cmd>lua vim.lsp.buf.outgoing_calls()<CR>
+
+nnoremap <silent> gO <cmd>lua vim.lsp.buf.document_symbol()<CR>
+nnoremap <silent> <space>o <cmd>lua vim.lsp.buf.document_symbol()<CR>
+nnoremap <silent> gW  <cmd>lua vim.lsp.buf.workspace_symbol()<CR>
+nnoremap <C-k> <cmd>lua vim.lsp.buf.signature_help()<CR>
+nnoremap <space>wa <cmd>lua vim.lsp.buf.add_workspace_folder()<CR>
+nnoremap <space>wr <cmd>lua vim.lsp.buf.remove_workspace_folder()<CR>
+nnoremap <space>wl <cmd>lua print(vim.inspect(vim.lsp.buf.list_workspace_folders()))<CR>
+nnoremap <space>d <cmd>lua vim.lsp.buf.type_definition()<CR>
+nnoremap <space>rn <cmd>lua vim.lsp.buf.rename()<CR>
+nnoremap <space>ca <cmd>lua vim.lsp.buf.code_action()<CR>
+nnoremap <space>e <cmd>lua vim.lsp.diagnostic.show_line_diagnostics()<CR>
+nnoremap [d <cmd>lua vim.lsp.diagnostic.goto_prev()<CR>
+nnoremap ]d <cmd>lua vim.lsp.diagnostic.goto_next()<CR>'
+nnoremap <space>q <cmd>lua vim.lsp.diagnostic.set_loclist()<CR>
+nnoremap <space>ff <cmd>lua vim.lsp.buf.formatting()<CR>
+nnoremap <space>fr <cmd>lua vim.lsp.buf.range_formatting()<CR>
+
+nnoremap <leader>sr <cmd>lua vim.lsp.buf.server_ready()<CR>
+nnoremap <leader>jl <cmd>lua vim.lsp.util.jump_to_location()<CR>
+
 
 
 " <Leader><Leader>f{char} to move to {char}
@@ -215,9 +237,6 @@ nnoremap <silent> gd    <cmd>lua vim.lsp.buf.declaration()<CR>
 "map  <space><space>w <Plug>(easymotion-bd-w)
 "nmap <space><space>w <Plug>(easymotion-overwin-w)
 
-nmap <space>ff :Format<CR>
-nmap <space>fl :CocFix<CR>
-nmap <space>fi :OR<CR>
 imap ;; <ESC>A;<ESC>
 
 map <leader>ma mA
@@ -240,25 +259,132 @@ let g:completion_matching_strategy_list = ['exact', 'substring', 'fuzzy']
 let g:completion_matching_smart_case = 1
 let g:completion_trigger_on_delete = 1
 
+" Telescope
+map <Leader>r :Telescope oldfiles<CR>
+map <leader>f :Telescope git_files<CR>
+map <Leader>e :Telescope buffers<CR>
+map <leader>t :Telescope live_grep<CR>;
+map <leader>m :Telescope marks<CR>
+map <space>f :Telescope current_buffer_fuzzy_find<CR>
+
+map <leader>gc :Telescope git_commits<CR>
+map <leader>gbc :Telescope git_bcomits<CR>
+map <leader>gb :Telescope git_branches<CR>
+
 
 "require'lspconfig'.jdtls.setup{ on_attach=require'completion'.on_attach } 
+" Treeeseeter error
+":lua << EOF
+"   require'nvim-treesitter.configs'.setup {
+"     ensure_installed = "maintained",
+"     highlight = {
+"       enable = true,
+"       disable = { },
+"     },
+"   }
+" EOF
+lua local actions = require('telescope.actions') require('telescope').setup{ defaults = { mappings = { i = { ["<esc>"] = actions.close }, }, } }
+lua require'nvim-treesitter.configs'.setup { ensure_installed = "maintained", highlight = { enable = true, }, }
+
+" :lua << EOF
+"   local on_attach = function(_, bufnr)
+"     require('completion').on_attach()
+"   end   
+"     require'lspconfig'.jdtls.setup{ on_attach=on_attach, init_options = { jvm_args = {"-javaagent:/Users/phazo/.m2/repository/org/projectlombok/lombok/1.18.8/lombok-1.18.8.jar", "-Xbootclasspath/a:/Users/phazo/.m2/repository/org/projectlombok/lombok/1.18.8/lombok-1.18.8.jar"} } }     
+"     require'lspconfig'.tsserver.setup{ on_attach=on_attach }
+" EOF
+
 
 :lua << EOF
-  require'nvim-treesitter.configs'.setup {
-    ensure_installed = "maintained",
-    highlight = {
-      enable = true,
-      disable = { },
-    },
-  }
-EOF
-
-:lua << EOF
-  local on_attach = function(_, bufnr)
-    require('completion').on_attach()
-  end   
-    require'lspconfig'.jdtls.setup{ on_attach=on_attach,  init_options = { jvm_args = {"-javaagent:/Users/phazo/.m2/repository/org/projectlombok/lombok/1.18.8/lombok-1.18.8.jar", "-Xbootclasspath/a:/Users/phazo/.m2/repository/org/projectlombok/lombok/1.18.8/lombok-1.18.8.jar"} } }     
+    require'lspconfig'.jdtls.setup{ on_attach=on_attach, init_options = { jvm_args = {"-javaagent:/Users/phazo/.m2/repository/org/projectlombok/lombok/1.18.8/lombok-1.18.8.jar", "-Xbootclasspath/a:/Users/phazo/.m2/repository/org/projectlombok/lombok/1.18.8/lombok-1.18.8.jar"} } }     
     require'lspconfig'.tsserver.setup{ on_attach=on_attach }
 EOF
-" require'lspconfig'.jdtls.setup{ on_attach=on_attach } 
 
+
+
+
+
+
+
+"lua require'lspconfig'.jdtls.setup{  on_attach=require'completion'.on_attach } 
+"lua require'lspconfig'.tsserver.setup{ on_attach=on_attach}
+"lua require'lspconfig'.tsserver.setup{ on_attach=require'completion'.on_attach }
+" if has('nvim-0.5')
+"   augroup lsp
+"     au!
+"     au FileType java lua require('jdtls').start_or_attach({cmd = {"C:\Users\bpater\AppData\Local\nvim\java-run.bat"}})
+"   augroup end
+" endif
+
+
+" WYEXPORTOWACCC
+"  export JAR=/path/to/eclipse.jdt.ls/org.eclipse.jdt.ls.product/target/repository/plugins/org.eclipse.equinox.launcher_1.6.0.v20200915-1508.jar 
+"  export JAVA_HOME=/usr/lib/jvm/java-11-openjdk-11.0.9.11-9.fc33.x86_64/ 
+"  export JDTLS_CONFIG=/path/to/eclipse.jdt.ls/org.eclipse.jdt.ls.product/target/repository/config_linux 
+"  
+" export WORKSPACE=$HOME/workspace 
+"  ``` 
+
+
+
+
+:lua << EOF
+-- Compe setup
+require'compe'.setup {
+  enabled = true;
+  autocomplete = true;
+  debug = false;
+  min_length = 1;
+  preselect = 'enable';
+  throttle_time = 80;
+  source_timeout = 200;
+  incomplete_delay = 400;
+  max_abbr_width = 100;
+  max_kind_width = 100;
+  max_menu_width = 100;
+  documentation = true;
+
+  source = {
+    path = true;
+    nvim_lsp = true;
+  };
+}
+
+local t = function(str)
+  return vim.api.nvim_replace_termcodes(str, true, true, true)
+end
+
+local check_back_space = function()
+    local col = vim.fn.col('.') - 1
+    if col == 0 or vim.fn.getline('.'):sub(col, col):match('%s') then
+        return true
+    else
+        return false
+    end
+end
+
+-- Use (s-)tab to:
+--- move to prev/next item in completion menuone
+--- jump to prev/next snippet's placeholder
+_G.tab_complete = function()
+  if vim.fn.pumvisible() == 1 then
+    return t "<C-n>"
+  elseif check_back_space() then
+    return t "<Tab>"
+  else
+    return vim.fn['compe#complete']()
+  end
+end
+_G.s_tab_complete = function()
+  if vim.fn.pumvisible() == 1 then
+    return t "<C-p>"
+  else
+    return t "<S-Tab>"
+  end
+end
+
+vim.api.nvim_set_keymap("i", "<Tab>", "v:lua.tab_complete()", {expr = true})
+vim.api.nvim_set_keymap("s", "<Tab>", "v:lua.tab_complete()", {expr = true})
+vim.api.nvim_set_keymap("i", "<S-Tab>", "v:lua.s_tab_complete()", {expr = true})
+vim.api.nvim_set_keymap("s", "<S-Tab>", "v:lua.s_tab_complete()", {expr = true})
+EOF
