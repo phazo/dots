@@ -1,13 +1,19 @@
 " Plug
+"
 " curl -fLo ~/.vim/autoload/plug.vim --create-dirs \
 "    https://raw.githubusercontent.com/junegunn/vim-plug/master/plug.vim
 " WINDOWS
-au VimEnter * GuiPopupmenu 0
+"au VimEnter * GuiPopupmenu 0
+
+
+" Make cursor change on terminal
+let &t_SI = "\<Esc>]50;CursorShape=1\x7"
+let &t_EI = "\<Esc>]50;CursorShape=0\x7"
 
 
 syntax on
 
-set guicursor=
+"set guicursor=
 set relativenumber
 set nohlsearch
 set hidden
@@ -66,7 +72,8 @@ Plug 'amix/vim-zenroom2'
 Plug 'Yggdroot/indentLine'
 Plug 'Townk/vim-autoclose'
 Plug 'prettier/vim-prettier'
-
+Plug 'SirVer/ultisnips'
+Plug 'vim-test/vim-test'
 
 Plug 'wesQ3/vim-windowswap'
 Plug 'troydm/zoomwintab.vim'
@@ -89,6 +96,7 @@ Plug 'mfussenegger/nvim-jdtls'
 
 " DODAC LSP SAGA
 Plug 'glepnir/lspsaga.nvim'
+Plug 'ray-x/lsp_signature.nvim'
 
 
 
@@ -96,6 +104,9 @@ Plug 'maxbrunsfeld/vim-yankstack'
 Plug 'iamcco/markdown-preview.nvim', { 'do': { -> mkdp#util#install() }, 'for': ['markdown', 'vim-plug']}
 call plug#end()
 
+"  VIM TEST
+let test#project_root = "/Users/phazo/projects/opentangarine/hot/hot-app"
+let test#strategy = "neovim"
 
 colorscheme gruvbox
 set background=dark
@@ -146,8 +157,20 @@ let mapleader=','
 
 noremap H ^
 noremap L $
-nnoremap D d$
+"nnoremap D d$
+" Primegegen Remaps
 nnoremap Y y$
+nnoremap n nzzzv
+nnoremap N Nzzzv
+nnoremap J mzJ`z
+
+inoremap , ,<c-g>u
+inoremap ; ;<c-g>u
+
+" Move visualy marked text
+vnoremap J :m '>+1<CR>gv=gv
+vnoremap K :m '<-2<CR>gv=gv
+
 nnoremap go o<Esc>k
 nnoremap gO O<Esc>j
 nmap zk O<Esc>j  
@@ -197,12 +220,13 @@ nnoremap gD <Cmd>lua vim.lsp.buf.declaration()<CR>
 nnoremap gd <Cmd>lua vim.lsp.buf.definition()<CR>
 nnoremap K <Cmd>lua vim.lsp.buf.hover()<CR>
 nnoremap gi <cmd>lua vim.lsp.buf.implementation()<CR>
-nnoremap gr <cmd>lua vim.lsp.buf.references()<CR>
+noremap gr <cmd>lua vim.lsp.buf.references()<CR>
+nnoremap gp :Lspsaga preview_definition<CR>
 
 nnoremap gh <cmd>lua vim.lsp.buf.outgoing_calls()<CR>
 
 "nnoremap <silent> gO <cmd>lua vim.lsp.buf.document_symbol()<CR>
-nnoremap <silent> <space>o <cmd>lua vim.lsp.buf.document_symbol()<CR>
+nnoremap <silent> <space><space>o <cmd>lua vim.lsp.buf.document_symbol()<CR>
 nnoremap <silent> gW  <cmd>lua vim.lsp.buf.workspace_symbol()<CR>
 nnoremap <C-k> <cmd>lua vim.lsp.buf.signature_help()<CR>
 nnoremap <space>wa <cmd>lua vim.lsp.buf.add_workspace_folder()<CR>
@@ -211,16 +235,20 @@ nnoremap <space>wl <cmd>lua print(vim.inspect(vim.lsp.buf.list_workspace_folders
 nnoremap <space>d <cmd>lua vim.lsp.buf.type_definition()<CR>
 nnoremap <space>rn <cmd>lua vim.lsp.buf.rename()<CR>
 nnoremap <space>ca <cmd>lua vim.lsp.buf.code_action()<CR>
+nnoremap <space><space>ca :Lspsaga code_action<CR>
 nnoremap <space>e <cmd>lua vim.lsp.diagnostic.show_line_diagnostics()<CR>
-nnoremap [d <cmd>lua vim.lsp.diagnostic.goto_prev()<CR>
-nnoremap ]d <cmd>lua vim.lsp.diagnostic.goto_next()<CR>'
+nnoremap <space>[ <cmd>lua vim.lsp.diagnostic.goto_prev()<CR>
+nnoremap <space>] <cmd>lua vim.lsp.diagnostic.goto_next()<CR>'
 nnoremap <space>q <cmd>lua vim.lsp.diagnostic.set_loclist()<CR>
 nnoremap <space>ff <cmd>lua vim.lsp.buf.formatting()<CR>
 nnoremap <space>fr <cmd>lua vim.lsp.buf.range_formatting()<CR>
 
 nnoremap <leader>sr <cmd>lua vim.lsp.buf.server_ready()<CR>
 nnoremap <leader>jl <cmd>lua vim.lsp.util.jump_to_location()<CR>
+nnoremap gS :Lspsaga signature_help<CR>
 
+
+command! -nargs=0 OR call: <Cmd>lua require'jdtls'.organize_imports()<CR>
 
 imap ;; <ESC>A;<ESC>
 
@@ -255,7 +283,14 @@ map <space>f :Telescope current_buffer_fuzzy_find<CR>
 map <leader>gc :Telescope git_commits<CR>
 map <leader>gbc :Telescope git_bcomits<CR>
 map <leader>gb :Telescope git_branches<CR>
-map <leader>o :Telescope lsp_document_symbols<CR>
+map <space>o :Telescope lsp_document_symbols  layout_strategy=vertical<CR>
+
+map <space>d :Telescope lsp_document_diagnostics<CR>
+map <leader>d :Telescope lsp_workspace_diagnostics<CR>
+map <space>r :Telescope lsp_references<CR>
+
+
+
 "map <space>o :Telescope lsp_document_symbols<CR>
 "map <leader>o :Telescope lsp_workspace_symbols<CR>
 
@@ -264,12 +299,11 @@ lua require'nvim-treesitter.configs'.setup { ensure_installed = "maintained", hi
 
 augroup lsp
   au!
-  au FileType java lua require('jdtls').start_or_attach({cmd = {"C:/jdtls/java-lsp.bat", "C:/Users/bpater/workspace/" .. vim.fn.fnamemodify(vim.fn.getcwd(), ':p:h:t')}, root_dir = require('jdtls.setup').find_root({'gradle.build', 'pom.xml'})})
+  au FileType java lua require('jdtls').start_or_attach({cmd = {'/Users/phazo/projects/jdtls/java-lsp.sh', '/Users/phazo/projects/workspace/' .. vim.fn.fnamemodify(vim.fn.getcwd(), ':p:h:t')}, root_dir = require('jdtls.setup').find_root({'gradle.build', 'pom.xml'})})
 augroup end
 
 :lua << EOF
-    require'lspconfig'.tsserver.setup{ on_attach=on_attach }
-
+    -- require'lspconfig'.tsserver.setup{ on_attach=on_attach }
 
 
       --Enable (broadcasting) snippet capability for completion
@@ -279,11 +313,18 @@ augroup end
       require'lspconfig'.html.setup {
         capabilities = capabilities,
       }
-      require'lspconfig'.html.setup{  cmd = { "vscode-html-language-server.cmd", "--stdio" }}
-      require'lspconfig'.yamlls.setup{ cmd = { "yaml-language-server.cmd", "--stdio" } }
-      require'lspconfig'.jsonls.setup{ cmd = { "vscode-json-language-server.cmd", "--stdio" }}
-      require'lspconfig'.angularls.setup{ cmd = { "ngserver.cmd", "--stdio", "--tsProbeLocations", "", "--ngProbeLocations", "" }}
+      -- require'lspconfig'.html.setup{  cmd = { "vscode-html-language-server.cmd", "--stdio" }}
+      -- require'lspconfig'.yamlls.setup{ cmd = { "yaml-language-server.cmd", "--stdio" } }
+      -- require'lspconfig'.jsonls.setup{ cmd = { "vscode-json-language-server.cmd", "--stdio" }}
+      -- require'lspconfig'.angularls.setup{ cmd = { "ngserver.cmd", "--stdio", "--tsProbeLocations", "", "--ngProbeLocations", "" }}
 
+      require'lspconfig'.html.setup{}
+      require'lspconfig'.yamlls.setup{}
+      require'lspconfig'.jsonls.setup{}
+     -- require'lspconfig'.angularls.setup{}
+      require'lspconfig'.cssls.setup{}
+      require'lspconfig'.tsserver.setup{}
+    require'lsp_signature'.on_attach()
 
 EOF
 
@@ -298,9 +339,10 @@ lua <<EOF
   vim.lsp.handlers['workspace/symbol'] = require'lsputil.symbols'.workspace_handler
 EOF
 
-nnoremap <A-CR> <Cmd>lua require('jdtls').code_action()<CR>:
+map <leader>ca <Cmd>lua require('jdtls').code_action()<CR>
+"map <leader>ca :Telescope lsp_code_actions<cr>
 vnoremap <A-CR> <Esc><Cmd>lua require('jdtls').code_action(true)<CR>
-nnoremap <leader>ca <Cmd>lua require('jdtls').code_action(false, 'refactor')<CR>
+"nnoremap <leader>ca <Cmd>lua require('jdtls').code_action(false, 'refactor')<CR>
 
 nnoremap <A-o> <Cmd>lua require'jdtls'.organize_imports()<CR>
 nnoremap crv <Cmd>lua require('jdtls').extract_variable()<CR>
@@ -341,6 +383,8 @@ require'compe'.setup {
   source = {
     path = true;
     nvim_lsp = true;
+    vsnip = true;
+    ultisnips = true;
   };
 }
 
@@ -382,3 +426,10 @@ vim.api.nvim_set_keymap("s", "<Tab>", "v:lua.tab_complete()", {expr = true})
 vim.api.nvim_set_keymap("i", "<S-Tab>", "v:lua.s_tab_complete()", {expr = true})
 vim.api.nvim_set_keymap("s", "<S-Tab>", "v:lua.s_tab_complete()", {expr = true})
 EOF
+
+inoremap <silent><expr> <C-Space> compe#complete()
+inoremap <silent><expr> <CR>      compe#confirm('<CR>')
+inoremap <silent><expr> <C-e>     compe#close('<C-e>')
+inoremap <silent><expr> <C-f>     compe#scroll({ 'delta': +4 })
+inoremap <silent><expr> <C-d>     compe#scroll({ 'delta': -4 })
+
