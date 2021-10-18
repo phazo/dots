@@ -1,13 +1,19 @@
 " Plug
+"
 " curl -fLo ~/.vim/autoload/plug.vim --create-dirs \
 "    https://raw.githubusercontent.com/junegunn/vim-plug/master/plug.vim
-
 " WINDOWS
 "au VimEnter * GuiPopupmenu 0
 
+
+" Make cursor change on terminal
+let &t_SI = "\<Esc>]50;CursorShape=1\x7"
+let &t_EI = "\<Esc>]50;CursorShape=0\x7"
+
+
 syntax on
 
-set guicursor=
+"set guicursor=
 set relativenumber
 set nohlsearch
 set hidden
@@ -40,28 +46,16 @@ set shortmess+=c
 
 set colorcolumn=120
 highlight ColorColumn ctermbg=0 guibg=lightgrey
-
-
-
-
+ 
 call plug#begin()
 Plug 'tpope/vim-fugitive'
 Plug 'junegunn/gv.vim'
 Plug 'vim-utils/vim-man'
 Plug 'mbbill/undotree'
-Plug 'sheerun/vim-polyglot'
-
-Plug 'junegunn/fzf', { 'do': { -> fzf#install() } }
-Plug 'junegunn/fzf.vim'
-"Plug 'stsewd/fzf-checkout.vim'
-"Plug 'lvht/fzf-mru'
-Plug 'antoinemadec/coc-fzf'
-
-Plug 'gruvbox-community/gruvbox'
-
-"Plug 'morhetz/gruvbox'
-"Plug 'lifepillar/vim-gruvbox8'
-
+"Plug 'sheerun/vim-polyglot'
+Plug 'machakann/vim-highlightedyank'
+"Plug 'gruvbox-community/gruvbox'
+Plug 'morhetz/gruvbox'
 Plug 'mhinz/vim-startify'
 Plug 'luochen1990/rainbow'
 Plug 'junegunn/limelight.vim'
@@ -69,6 +63,7 @@ Plug 'tpope/vim-surround'
 Plug 'scrooloose/nerdtree'
 Plug 'junegunn/vim-plug'
 Plug 'amiorin/vim-project'
+"Plug 'dbakker/vim-projectroot'
 "Plug 'easymotion/vim-easymotion'
 Plug 'justinmk/vim-sneak'
 Plug 'vim-airline/vim-airline'
@@ -77,33 +72,41 @@ Plug 'amix/vim-zenroom2'
 Plug 'Yggdroot/indentLine'
 Plug 'Townk/vim-autoclose'
 Plug 'prettier/vim-prettier'
-Plug 'neoclide/coc.nvim', {'branch': 'release'}
-Plug 'HerringtonDarkholme/yats.vim'
-Plug 'sheerun/vim-polyglot'
-"Plug 'SirVer/ultisnips'
+Plug 'SirVer/ultisnips'
+Plug 'vim-test/vim-test'
+
 Plug 'wesQ3/vim-windowswap'
 Plug 'troydm/zoomwintab.vim'
 
-Plug 'airblade/vim-rooter'
-Plug 'mhinz/vim-signify'
 
 Plug 'nvim-treesitter/nvim-treesitter', {'do': ':TSUpdate'}
 
 Plug 'nvim-lua/popup.nvim'
 Plug 'nvim-lua/plenary.nvim'
 Plug 'nvim-telescope/telescope.nvim'
+Plug 'nvim-telescope/telescope-fzy-native.nvim'
+
+Plug 'RishabhRD/popfix'
+Plug 'RishabhRD/nvim-lsputils'
+
+
+Plug 'neovim/nvim-lspconfig'
+Plug 'hrsh7th/nvim-compe'
+Plug 'mfussenegger/nvim-jdtls'
+
+" DODAC LSP SAGA
+Plug 'glepnir/lspsaga.nvim'
+Plug 'ray-x/lsp_signature.nvim'
 
 
 
+Plug 'maxbrunsfeld/vim-yankstack'
+Plug 'iamcco/markdown-preview.nvim', { 'do': { -> mkdp#util#install() }, 'for': ['markdown', 'vim-plug']}
 call plug#end()
 
-" vim-sneak
-let g:sneak#label = 1
-
-" Python paths settings
-"let g:python3_host_prog = "/usr/bin/Python"
-"let g:python2_host_prog = "/usr/local/bin/python"
-"let g:python3_host_prog = "/usr/local/bin/python3" 
+"  VIM TEST
+let test#project_root = "/Users/phazo/projects/opentangarine/hot/hot-app"
+let test#strategy = "neovim"
 
 colorscheme gruvbox
 set background=dark
@@ -135,6 +138,7 @@ set clipboard=unnamedplus,unnamed
 let g:fzf_layout = { 'window': { 'width': 0.8, 'height': 0.8 } }
 let $FZF_DEFAULT_OPTS='--reverse'
 
+
 autocmd FileType typescript setlocal formatprg=prettier\ --parser\ typescript
 autocmd FileType tex setl updatetime=1
 
@@ -142,104 +146,31 @@ let g:indent_guides_guide_size = 1
 let g:indent_guides_color_change_percent = 1
 let g:indent_guides_enable_on_vim_startup = 1
 
-let g:coc_global_extensions = [
-        \ 'coc-css',
-        \ 'coc-highlight',
-        \ 'coc-html',
-        \ 'coc-json',
-        \ 'coc-snippets',
-        \ 'coc-stylelint',
-        \ 'coc-tag',
-        \ 'coc-tsserver',
-        \ 'coc-prettier',
-        \ 'coc-eslint',
-        \ 'coc-tslint',
-        \ 'coc-angular',
-        \ 'coc-marketplace',
-        \ 'coc-java',
-        \ 'coc-java-lombok',
-        \ 'coc-yank'
-        \ ]
-
-
-" ----------------------------------------------------------------------
-"  COC SETUP
-" Use tab for trigger completion with characters ahead and navigate.
-" Use command ':verbose imap <tab>' to make sure tab is not mapped by other plugin.
-inoremap <silent><expr> <TAB>
-      \ pumvisible() ? "\<C-n>" :
-      \ <SID>check_back_space() ? "\<TAB>" :
-      \ coc#refresh()
-inoremap <expr><S-TAB> pumvisible() ? "\<C-p>" : "\<C-h>"
-
-function! s:check_back_space() abort
-  let col = col('.') - 1
-  return !col || getline('.')[col - 1]  =~# '\s'
-endfunction
-
-" Use <c-space> to trigger completion.
-inoremap <silent><expr> <c-space> coc#refresh()
-
-" Use <cr> to confirm completion, `<C-g>u` means break undo chain at current position.
-" Coc only does snippet and additional edit on confirm.
-inoremap <expr> <cr> pumvisible() ? "\<C-y>" : "\<C-g>u\<CR>"
-" Or use `complete_info` if your vim support it, like:
-" inoremap <expr> <cr> complete_info()["selected"] != "-1" ? "\<C-y>" : "\<C-g>u\<CR>"
-
-
-function! s:show_documentation()
-  if (index(['vim','help'], &filetype) >= 0)
-    execute 'h '.expand('<cword>')
-  else
-    call CocAction('doHover')
-  endif
-endfunction
-
-" Highlight symbol under cursor on CursorHold
-autocmd CursorHold * silent call CocActionAsync('highlight')
-
-augroup mygroup
-  autocmd!
-  " Setup formatexpr specified filetype(s).
-  autocmd FileType typescript,json setl formatexpr=CocAction('formatSelected')
-  " Update signature help on jump placeholder
-  autocmd User CocJumpPlaceholder call CocActionAsync('showSignatureHelp')
-augroup end
-
-
-" Use `:Format` to format current buffer
-command! -nargs=0 Format :call CocAction('format')
-
-" Use `:Fold` to fold current buffer
-command! -nargs=? Fold :call     CocAction('fold', <f-args>)
-
-" use `:OR` for organize import of current buffer
-command! -nargs=0 OR   :call     CocAction('runCommand', 'editor.action.organizeImport')
-
-" Add status line support, for integration with other plugin, checkout `:h coc-status`
-set statusline^=%{coc#status()}%{get(b:,'coc_current_function','')}
-
-
-" COC end SETUP
-" -----------------------------------------------------------------------------
-
 " Nerd Tree options
 let NERDTreeShowHidden=1  "  Always show dot files
 let NERDTreeQuitOnOpen=1
-let g:NERDTreeWinSize=51
 
 """ MAPPINGS
 let mapleader=','
-
-noremap <silent> <space>p  :<C-u>CocFzfList yank<cr>
-imap <C-l> <Plug>(coc-snippets-expand)
 
 " Mappings
 
 noremap H ^
 noremap L $
-nnoremap D d$
+"nnoremap D d$
+" Primegegen Remaps
 nnoremap Y y$
+nnoremap n nzzzv
+nnoremap N Nzzzv
+nnoremap J mzJ`z
+
+inoremap , ,<c-g>u
+inoremap ; ;<c-g>u
+
+" Move visualy marked text
+vnoremap J :m '>+1<CR>gv=gv
+vnoremap K :m '<-2<CR>gv=gv
+
 nnoremap go o<Esc>k
 nnoremap gO O<Esc>j
 nmap zk O<Esc>j  
@@ -250,31 +181,19 @@ vnoremap gk 15gkzz
 inoremap jk <Esc>
 nnoremap <esc><esc> :noh<return>
 
-" edit/save ideavimrc and load vimrc bindings
 map <leader><leader>e :vsp $MYVIMRC<CR>
 map <leader><leader>s :source $MYVIMRC<CR>
 
 " Split window vertically or horizontally *and* switch to the new split!
 map <leader>h :split<Bar>:wincmd j<CR>:wincmd =<CR>
 map <leader>v :vsplit<Bar>:wincmd l<CR>:wincmd =<CR>
-nnoremap <leader>u :UndotreeShow<CR>
 
-nnoremap <leader>gch :GCheckout<cr>
+
+nnoremap <leader>u :UndotreeShow<CR>
+nnoremap <C-p> :GFiles<CR>
+nnoremap <leader>gc :GCheckout<cr>
 nmap <leader>gs :G<CR>
 nmap <leader>gv :GV<CR>
-
-" Telescope
-map <Leader>r :Telescope oldfiles<CR>
-map <leader>f :Telescope git_files<CR>
-map <Leader>e :Telescope buffers<CR>
-map <leader>t :Telescope live_grep<CR>;
-map <leader>m :Telescope marks<CR>
-map <space>f :Telescope current_buffer_fuzzy_find<CR>
-
-map <leader>gc :Telescope git_commits<CR>
-map <leader>gbc :Telescope git_bcomits<CR>
-map <leader>gb :Telescope git_branches<CR>
-
 
 nnoremap <leader>x :close<CR>
 map <Leader>w  :NERDTreeFind<CR>
@@ -283,10 +202,6 @@ map <leader>p :bp<CR>
 map <Leader>q :Goyo 120<CR>;
 map <Leader>z :ZoomWinTabToggle<CR>
 " Show all diagnostics
-nnoremap <silent> <leader>rd  :<C-u>CocFzfList diagnostics --current-buf<cr>
-" Manage extensions
-nnoremap <silent> <leader>re  :<C-u>CocFzfList extensions<cr>
-
 
 nnoremap <space>s :w<CR>
 " key bindings for quickly moving between windows: h left, l right, k up, j down
@@ -300,83 +215,235 @@ map <space><Enter> i<Enter><ESC>
 map <space>; A;<ESC>
 map <space>al :ALEFix<CR>
 
-" <Leader><Leader>f{char} to move to {char}
-"map  <space><space>f <Plug>(easymotion-bd-f)
-"nmap <space><space>f <Plug>(easymotion-overwin-f)
-" Move to line
-"map <space><space>l <Plug>(easymotion-bd-jk)
-"nmap <space><space>l <Plug>(easymotion-overwin-line)
-" Move to word
-"map  <space><space>w <Plug>(easymotion-bd-w)
-"nmap <space><space>w <Plug>(easymotion-overwin-w)
+  " See `:help vim.lsp.*` for documentation on any of the below functions
+nnoremap gD <Cmd>lua vim.lsp.buf.declaration()<CR>
+nnoremap gd <Cmd>lua vim.lsp.buf.definition()<CR>
+nnoremap K <Cmd>lua vim.lsp.buf.hover()<CR>
+nnoremap gi <cmd>lua vim.lsp.buf.implementation()<CR>
+noremap gr <cmd>lua vim.lsp.buf.references()<CR>
+nnoremap gp :Lspsaga preview_definition<CR>
 
-nmap <space>gd <Plug>(coc-definition)
-nmap <space>gy <Plug>(coc-type-definition)
-nmap <space>gi <Plug>(coc-implementation)
-nmap <space>gr <Plug>(coc-references)
-nmap <space>rr <Plug>(coc-rename)
-nmap <silent> <space>[ <Plug>(coc-diagnostic-prev)
-nmap <silent> <space>] <Plug>(coc-diagnostic-next)
-nnoremap <silent> <space>d :call <SID>show_documentation()<CR>
-" Remap for format selected region
-xmap <space>fs  <Plug>(coc-format-selected)
-nmap <space>fs  <Plug>(coc-format-selected)
-nmap <space>ff :Format<CR>
-nmap <space>fl :CocFix<CR>
-nmap <space>fi :OR<CR>
-" Fix autofix problem of current line
-nmap <space>qf  <Plug>(coc-fix-current)
+nnoremap gh <cmd>lua vim.lsp.buf.outgoing_calls()<CR>
 
-" Applying codeAction to the selected region.
-" Example: `<leader>aap` for current paragraph
-xmap <leader>a  <Plug>(coc-codeaction-selected)
-nmap <leader>a  <Plug>(coc-codeaction-selected)
+"nnoremap <silent> gO <cmd>lua vim.lsp.buf.document_symbol()<CR>
+nnoremap <silent> <space><space>o <cmd>lua vim.lsp.buf.document_symbol()<CR>
+nnoremap <silent> gW  <cmd>lua vim.lsp.buf.workspace_symbol()<CR>
+nnoremap <C-k> <cmd>lua vim.lsp.buf.signature_help()<CR>
+nnoremap <space>wa <cmd>lua vim.lsp.buf.add_workspace_folder()<CR>
+nnoremap <space>wr <cmd>lua vim.lsp.buf.remove_workspace_folder()<CR>
+nnoremap <space>wl <cmd>lua print(vim.inspect(vim.lsp.buf.list_workspace_folders()))<CR>
+nnoremap <space>d <cmd>lua vim.lsp.buf.type_definition()<CR>
+nnoremap <space>rn <cmd>lua vim.lsp.buf.rename()<CR>
+nnoremap <space>ca <cmd>lua vim.lsp.buf.code_action()<CR>
+nnoremap <space><space>ca :Lspsaga code_action<CR>
+nnoremap <space>e <cmd>lua vim.lsp.diagnostic.show_line_diagnostics()<CR>
+nnoremap <space>[ <cmd>lua vim.lsp.diagnostic.goto_prev()<CR>
+nnoremap <space>] <cmd>lua vim.lsp.diagnostic.goto_next()<CR>'
+nnoremap <space>q <cmd>lua vim.lsp.diagnostic.set_loclist()<CR>
+nnoremap <space>ff <cmd>lua vim.lsp.buf.formatting()<CR>
+nnoremap <space>fr <cmd>lua vim.lsp.buf.range_formatting()<CR>
 
-" Remap keys for applying codeAction to the current buffer.
-nmap <leader>ac  <Plug>(coc-codeaction)
-" Use CTRL-S for selections ranges.
-" Requires 'textDocument/selectionRange' support of language server.
-nmap <silent> <C-s> <Plug>(coc-range-select)
-xmap <silent> <C-s> <Plug>(coc-range-select)
+nnoremap <leader>sr <cmd>lua vim.lsp.buf.server_ready()<CR>
+nnoremap <leader>jl <cmd>lua vim.lsp.util.jump_to_location()<CR>
+nnoremap gS :Lspsaga signature_help<CR>
 
 
-" Using CocList
-" Find symbol of current document
-nnoremap <silent> <space>o  :CocFzfList outline<cr>
-nnoremap <silent> <leader>l  :CocFzfList<cr>
-" Search workspace symbols
-"nnoremap <silent> <leader>t  :<c-u>coclist -i symbols<cr>
-" resume latest coc list
-"nnoremap <silent> <space>rp  :<C-u>CocListResume<CR>
+command! -nargs=0 OR call: <Cmd>lua require'jdtls'.organize_imports()<CR>
 
-"
-"
 imap ;; <ESC>A;<ESC>
 
-map <space>ma mA
+map <leader>ma mA
 map ma `A
-map <space>ms mS
+map <leader>ms mS
 map ms `S
-map <space>md mD
+map <leader>md mD
 map md `D
 
-map <space>mq mQ
+map <leader>mq mQ
 map mq `Q
-map <space>mw mW
+map <leader>mw mW
 map mw `W
-map <space>me mE
+map <leader>me mE
 map me `E
 
+set completeopt=menuone,noinsert,noselect
+"set cot=menuone,noinsert,noselect shm+=c
+let g:completion_matching_strategy_list = ['exact', 'substring', 'fuzzy']
+let g:completion_matching_smart_case = 1
+let g:completion_trigger_on_delete = 1
 
-map <leader><leader>ju :CocCommand java.updateLanguageServer<cr>
-map <leader><leader>jl :CocCommand workspace.showOutput java<cr>
-map <leader><leader>cw :CocCommand java.clean.workspace<cr>
-map <leader><leader>jsl :CocCommand java.open.serverLog<cr>
-map <leader><leader>uu :CocCommand java.projectConfiguration.update<cr>;
+" Telescope
+map <Leader>r :Telescope oldfiles<CR>
+map <leader>f :Telescope git_files<CR>
+map <Leader>e :Telescope buffers<CR>
+map <leader>t :Telescope live_grep<CR>
+"map <leader>t :Telescope lsp_dynamic_workspace_symbols  layout_strategy=vertical<CR>
+map <leader>m :Telescope marks<CR>
+map <space>f :Telescope current_buffer_fuzzy_find<CR>
 
-let g:rooter_patterns = ['.git', 'hot-app']
+map <leader>gc :Telescope git_commits<CR>
+map <leader>gbc :Telescope git_bcomits<CR>
+map <leader>gb :Telescope git_branches<CR>
+map <space>o :Telescope lsp_document_symbols layout_strategy=vertical<CR>
+
+map <space>d :Telescope lsp_document_diagnostics<CR>
+map <leader>d :Telescope lsp_workspace_diagnostics<CR>
+map <space>r :Telescope lsp_references<CR>
 
 
-lua require'nvim-treesitter.configs'.setup { ensure_installed = "maintained", highlight = {enable = true, disable = { },},}
+
+"map <space>o :Telescope lsp_document_symbols<CR>
+"map <leader>o :Telescope lsp_workspace_symbols<CR>
 
 lua local actions = require('telescope.actions') require('telescope').setup{ defaults = { mappings = { i = { ["<esc>"] = actions.close }, }, } }
+lua require'nvim-treesitter.configs'.setup { ensure_installed = "maintained", highlight = { enable = true, }, }
+
+
+" augroup lsp
+"   au!
+"   au FileType java lua require('jdtls').start_or_attach({cmd = {'jdtls'} , root_dir = require('jdtls.setup').find_root({'gradle.build', 'pom.xml'})})
+" augroup end
+
+" augroup lsp
+"   au!
+"   au FileType java lua require('jdtls').start_or_attach({cmd = {'/Users/phazo/projects/jdtls/java-lsp.sh', '/Users/phazo/projects/workspace/' .. vim.fn.fnamemodify(vim.fn.getcwd(), ':p:h:t')}, root_dir = require('jdtls.setup').find_root({'gradle.build', 'pom.xml'})})
+" augroup end
+
+lua require'lspconfig'.jdtls.setup{
+\   cmd = { 'jdtls' },
+\   root_dir = function(fname)
+\      return require'lspconfig'.util.root_pattern('pom.xml', 'gradle.build', '.git')(fname) or vim.fn.getcwd()
+\   end
+\}
+
+:lua << EOF
+    -- require'lspconfig'.tsserver.setup{ on_attach=on_attach }
+
+
+      --Enable (broadcasting) snippet capability for completion
+      local capabilities = vim.lsp.protocol.make_client_capabilities()
+      capabilities.textDocument.completion.completionItem.snippetSupport = true
+
+      require'lspconfig'.html.setup {
+        capabilities = capabilities,
+      }
+      -- require'lspconfig'.html.setup{  cmd = { "vscode-html-language-server.cmd", "--stdio" }}
+      -- require'lspconfig'.yamlls.setup{ cmd = { "yaml-language-server.cmd", "--stdio" } }
+      -- require'lspconfig'.jsonls.setup{ cmd = { "vscode-json-language-server.cmd", "--stdio" }}
+      -- require'lspconfig'.angularls.setup{ cmd = { "ngserver.cmd", "--stdio", "--tsProbeLocations", "", "--ngProbeLocations", "" }}
+
+      require'lspconfig'.html.setup{}
+      require'lspconfig'.yamlls.setup{}
+      require'lspconfig'.jsonls.setup{}
+     -- require'lspconfig'.angularls.setup{}
+      require'lspconfig'.cssls.setup{}
+      require'lspconfig'.tsserver.setup{}
+    require'lsp_signature'.on_attach()
+
+EOF
+
+" lua <<EOF
+"   vim.lsp.handlers['textDocument/codeAction'] = require'lsputil.codeAction'.code_action_handler
+"   vim.lsp.handlers['textDocument/references'] = require'lsputil.locations'.references_handler
+"   vim.lsp.handlers['textDocument/definition'] = require'lsputil.locations'.definition_handler
+"   vim.lsp.handlers['textDocument/declaration'] = require'lsputil.locations'.declaration_handler
+"   vim.lsp.handlers['textDocument/typeDefinition'] = require'lsputil.locations'.typeDefinition_handler
+"   vim.lsp.handlers['textDocument/implementation'] = require'lsputil.locations'.implementation_handler
+"   vim.lsp.handlers['textDocument/documentSymbol'] = require'lsputil.symbols'.document_handler
+"   vim.lsp.handlers['workspace/symbol'] = require'lsputil.symbols'.workspace_handler
+" EOF
+
+map <leader>ca <Cmd>lua require('jdtls').code_action()<CR>
+"map <leader>ca :Telescope lsp_code_actions<cr>
+vnoremap <A-CR> <Esc><Cmd>lua require('jdtls').code_action(true)<CR>
+"nnoremap <leader>ca <Cmd>lua require('jdtls').code_action(false, 'refactor')<CR>
+
+nnoremap <A-o> <Cmd>lua require'jdtls'.organize_imports()<CR>
+nnoremap crv <Cmd>lua require('jdtls').extract_variable()<CR>
+vnoremap crv <Esc><Cmd>lua require('jdtls').extract_variable(true)<CR>
+nnoremap crc <Cmd>lua require('jdtls').extract_constant()<CR>
+vnoremap crc <Esc><Cmd>lua require('jdtls').extract_constant(true)<CR>
+vnoremap crm <Esc><Cmd>lua require('jdtls').extract_method(true)<CR>
+
+
+" If using nvim-dap
+" This requires java-debug and vscode-java-test bundles, see install steps in this README further below.
+nnoremap <leader>df <Cmd>lua require'jdtls'.test_class()<CR>
+nnoremap <leader>dn <Cmd>lua require'jdtls'.test_nearest_method()<CR>
+
+command! -buffer JdtCompile lua require('jdtls').compile()
+command! -buffer JdtUpdateConfig lua require('jdtls').update_project_config()
+command! -buffer JdtJol lua require('jdtls').jol()
+command! -buffer JdtBytecode lua require('jdtls').javap()
+command! -buffer JdtJshell lua require('jdtls').jshell()
+
+" COMPE SETUP
+:lua << EOF
+-- Compe setup
+require'compe'.setup {
+  enabled = true;
+  autocomplete = true;
+  debug = false;
+  min_length = 1;
+  preselect = 'enable';
+  throttle_time = 80;
+  source_timeout = 200;
+  incomplete_delay = 400;
+  max_abbr_width = 100;
+  max_kind_width = 100;
+  max_menu_width = 100;
+  documentation = true;
+
+  source = {
+    path = true;
+    nvim_lsp = true;
+    vsnip = true;
+    ultisnips = true;
+  };
+}
+
+local t = function(str)
+  return vim.api.nvim_replace_termcodes(str, true, true, true)
+end
+
+local check_back_space = function()
+    local col = vim.fn.col('.') - 1
+    if col == 0 or vim.fn.getline('.'):sub(col, col):match('%s') then
+        return true
+    else
+        return false
+    end
+end
+
+-- Use (s-)tab to:
+--- move to prev/next item in completion menuone
+--- jump to prev/next snippet's placeholder
+_G.tab_complete = function()
+  if vim.fn.pumvisible() == 1 then
+    return t "<C-n>"
+  elseif check_back_space() then
+    return t "<Tab>"
+  else
+    return vim.fn['compe#complete']()
+  end
+end
+_G.s_tab_complete = function()
+  if vim.fn.pumvisible() == 1 then
+    return t "<C-p>"
+  else
+    return t "<S-Tab>"
+  end
+end
+
+vim.api.nvim_set_keymap("i", "<Tab>", "v:lua.tab_complete()", {expr = true})
+vim.api.nvim_set_keymap("s", "<Tab>", "v:lua.tab_complete()", {expr = true})
+vim.api.nvim_set_keymap("i", "<S-Tab>", "v:lua.s_tab_complete()", {expr = true})
+vim.api.nvim_set_keymap("s", "<S-Tab>", "v:lua.s_tab_complete()", {expr = true})
+EOF
+
+inoremap <silent><expr> <C-Space> compe#complete()
+inoremap <silent><expr> <CR>      compe#confirm('<CR>')
+inoremap <silent><expr> <C-e>     compe#close('<C-e>')
+inoremap <silent><expr> <C-f>     compe#scroll({ 'delta': +4 })
+inoremap <silent><expr> <C-d>     compe#scroll({ 'delta': -4 })
+
