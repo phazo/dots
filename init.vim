@@ -2,6 +2,9 @@
 "
 " curl -fLo ~/.vim/autoload/plug.vim --create-dirs \
 "    https://raw.githubusercontent.com/junegunn/vim-plug/master/plug.vim
+
+" Jdtls launcher https://github.com/eruizc-dev/jdtls-launcher
+
 " WINDOWS
 "au VimEnter * GuiPopupmenu 0
 
@@ -93,14 +96,17 @@ Plug 'RishabhRD/nvim-lsputils'
 Plug 'neovim/nvim-lspconfig'
 Plug 'mfussenegger/nvim-jdtls'
 
-
+" CMP
 Plug 'hrsh7th/cmp-nvim-lsp'
 Plug 'hrsh7th/cmp-buffer'
 Plug 'hrsh7th/nvim-cmp'
-
+Plug 'hrsh7th/cmp-path'
 " For vsnip users.
 Plug 'hrsh7th/cmp-vsnip'
 Plug 'hrsh7th/vim-vsnip'
+
+Plug 'onsails/lspkind-nvim'
+
 
 " DODAC LSP SAGA
 Plug 'glepnir/lspsaga.nvim'
@@ -110,6 +116,12 @@ Plug 'ray-x/lsp_signature.nvim'
 
 Plug 'maxbrunsfeld/vim-yankstack'
 Plug 'iamcco/markdown-preview.nvim', { 'do': { -> mkdp#util#install() }, 'for': ['markdown', 'vim-plug']}
+
+
+" AI Complete
+Plug 'github/copilot.vim'
+Plug 'tzachar/cmp-tabnine', { 'do': './install.sh' }
+
 call plug#end()
 
 "  VIM TEST
@@ -305,24 +317,6 @@ map <space>ts :TestSuite<CR>
 lua local actions = require('telescope.actions') require('telescope').setup{ defaults = { mappings = { i = { ["<esc>"] = actions.close }, }, } }
 lua require'nvim-treesitter.configs'.setup { ensure_installed = "maintained", highlight = { enable = true, }, }
 
-
-" augroup lsp
-"   au!
-"   au FileType java lua require('jdtls').start_or_attach({cmd = {'jdtls'} , root_dir = require('jdtls.setup').find_root({'gradle.build', 'pom.xml'})})
-" augroup end
-
-" augroup lsp
-"   au!
-"   au FileType java lua require('jdtls').start_or_attach({cmd = {'/Users/phazo/projects/jdtls/java-lsp.sh', '/Users/phazo/projects/workspace/' .. vim.fn.fnamemodify(vim.fn.getcwd(), ':p:h:t')}, root_dir = require('jdtls.setup').find_root({'gradle.build', 'pom.xml'})})
-" augroup end
-
-" lua require'lspconfig'.jdtls.setup{
-" \   cmd = { 'jdtls' },
-" \   root_dir = function(fname)
-" \      return require'lspconfig'.util.root_pattern('pom.xml', 'gradle.build', '.git')(fname) or vim.fn.getcwd()
-" \   end
-" \}
-
 :lua << EOF
     -- require'lspconfig'.tsserver.setup{ on_attach=on_attach }
 
@@ -398,6 +392,20 @@ command! -buffer JdtBytecode lua require('jdtls').javap()
 command! -buffer JdtJshell lua require('jdtls').jshell()
 
 :lua <<EOF
+    local tabnine = require('cmp_tabnine.config')
+    tabnine:setup({
+            max_lines = 1000;
+            max_num_results = 20;
+            sort = true;
+      run_on_every_keystroke = true;
+      snippet_placeholder = '..';
+    })
+
+    local lspkind = require "lspkind"
+    lspkind.init()
+
+
+
   -- Setup nvim-cmp.
   local cmp = require'cmp'
 
@@ -418,13 +426,38 @@ command! -buffer JdtJshell lua require('jdtls').jshell()
       ['<ESC>'] = cmp.mapping.close(),
       ['<CR>'] = cmp.mapping.confirm({ select = true}),
     },
+    --  max_item_count = 10 Limits
     sources = cmp.config.sources({
-      { name = 'nvim_lsp' },
+      { name = 'nvim_lsp'},
+      { name = 'cmp_tabnine' },
       { name = 'vsnip' }, -- For vsnip users.
-    }, {
       { name = 'buffer' },
-    })
+      { name = "path" },
+    }),
+    formatting = {
+      -- Youtube: How to set up nice formatting for your sources.
+      format = lspkind.cmp_format {
+        with_text = true,
+        menu = {
+          buffer = "[buf]",
+          nvim_lsp = "[LSP]",
+          cmp_tabnine = "[Tabnine]",
+          path = "[path]",
+          vsnip = "[snip]",
+        },
+      },
+    },
+    experimental = {
+      -- I like the new menu better! Nice work hrsh7th
+      native_menu = false,
+
+      -- Let's play with this for a day or two
+      ghost_text = true,
+    },
+
   })
+
+
 EOF
 
 
